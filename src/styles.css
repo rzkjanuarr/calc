@@ -1,0 +1,813 @@
+/* Lot Dinamis: kertas grafik, tinta biru-tua, satu aksen ultramarine untuk angka lot. */
+
+:root {
+  --paper: #edf1f3;
+  --grid: #d6dee3;
+  --surface: #fbfcfd;
+  --ink: #16222c;
+  --muted: #566774;
+  --line: #c6d1d8;
+  --accent: #2438d1;
+  --accent-bg: #e3e7fb;
+  --profit: #12795a;
+  --profit-bg: #dcf0e8;
+  --loss: #b8372b;
+  --loss-bg: #f8e1de;
+  --warn: #6f4e00;
+  --warn-bg: #fff0c9;
+  --neutral-bg: #e2e9ed;
+
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Public Sans', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 16px;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Kertas grafik di belakang halaman. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.6;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+h1,
+h2,
+h3,
+p,
+ol,
+dl,
+dd {
+  margin: 0;
+}
+
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.container {
+  width: min(1160px, 100% - 32px);
+  margin-inline: auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.header__nav {
+  display: flex;
+  gap: 20px;
+}
+
+.header__nav a {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.header__nav a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  padding: 40px 0 36px;
+  text-align: center;
+}
+
+.hero__title {
+  max-width: 16ch;
+  margin-inline: auto;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7.4vw, 5.25rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.hero__lead {
+  max-width: 54ch;
+  margin-inline: auto;
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 1.125rem;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 24px;
+  margin-top: 28px;
+}
+
+.hero__pairs {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: var(--accent);
+}
+
+/* ---------- Layout kalkulator ---------- */
+
+.calc {
+  display: grid;
+  gap: 20px;
+  padding-bottom: 72px;
+}
+
+.calc__output,
+.calc__main {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+
+@media (min-width: 960px) {
+  .calc {
+    grid-template-columns: 360px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .form {
+    position: sticky;
+    top: 16px;
+  }
+}
+
+@media (min-width: 1180px) {
+  .calc__main {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: stretch;
+  }
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.card__title {
+  margin-bottom: 18px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Form ---------- */
+
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.form .card__title {
+  margin-bottom: 0;
+}
+
+.form__group {
+  display: grid;
+  gap: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.form__group--pair {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.field__control {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.field__control:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.field__control.is-invalid {
+  border-color: var(--loss);
+  box-shadow: 0 0 0 3px var(--loss-bg);
+}
+
+.field__input {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
+.field__input:focus,
+.field__input:focus-visible {
+  outline: none;
+}
+
+.field__select {
+  appearance: auto;
+  cursor: pointer;
+}
+
+.field__affix {
+  padding: 0 4px 0 12px;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.field__input + .field__affix {
+  padding: 0 12px 0 0;
+  font-size: 0.875rem;
+}
+
+.field__hint {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+/* ---------- Hasil ---------- */
+
+.result__head {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.result__lot-label {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.result__lot {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: clamp(3.75rem, 9vw, 6rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.result__lot--none {
+  color: var(--loss);
+  font-size: clamp(2.25rem, 6vw, 3.25rem);
+}
+
+.result__lot-note {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  column-gap: 28px;
+}
+
+.stat {
+  padding: 14px 0 16px;
+  border-top: 1px solid var(--line);
+}
+
+.stat__label {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stat__value {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.stat__note {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.stat__note strong {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+/* ---------- Money, Badge, Notice ---------- */
+
+.money {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.money__usd {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.money__idr {
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.money__pct {
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.money--lg .money__usd {
+  font-size: 1.625rem;
+}
+
+.money--md .money__usd {
+  font-size: 1.25rem;
+}
+
+.money--sm .money__usd {
+  font-size: 1.0625rem;
+}
+
+.money--sm .money__idr {
+  font-size: 0.8125rem;
+}
+
+.money--sm .money__pct {
+  font-size: 0.75rem;
+}
+
+.money--profit .money__usd {
+  color: var(--profit);
+}
+
+.money--loss .money__usd {
+  color: var(--loss);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge--buy {
+  background: var(--profit-bg);
+  color: var(--profit);
+}
+
+.badge--sell,
+.badge--over {
+  background: var(--loss-bg);
+  color: var(--loss);
+}
+
+.badge--ok {
+  background: var(--accent);
+  color: #fff;
+}
+
+.badge--neutral {
+  background: var(--neutral-bg);
+  color: var(--muted);
+}
+
+.notice {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-left: 4px solid var(--muted);
+  border-radius: 0 8px 8px 0;
+  background: var(--neutral-bg);
+  font-size: 0.9375rem;
+}
+
+.notice--warn {
+  border-left-color: #c58a00;
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.notice--error {
+  border-left-color: var(--loss);
+  background: var(--loss-bg);
+  color: var(--loss);
+}
+
+/* ---------- Tangga harga ---------- */
+
+.ladder {
+  position: relative;
+  height: 400px;
+  margin-bottom: 18px;
+}
+
+.ladder::before {
+  content: '';
+  position: absolute;
+  top: 4%;
+  bottom: 4%;
+  left: 16px;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.ladder__segment {
+  position: absolute;
+  left: 16px;
+  width: 4px;
+  border-radius: 2px;
+  transition:
+    top 0.35s ease,
+    height 0.35s ease;
+}
+
+.ladder__segment--profit {
+  background: var(--profit);
+}
+
+.ladder__segment--loss {
+  background: var(--loss);
+}
+
+.ladder__marker {
+  position: absolute;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transform: translateY(-50%);
+  transition: top 0.35s ease;
+}
+
+.ladder__dot {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.ladder__marker--profit .ladder__dot {
+  border-color: var(--profit);
+}
+
+.ladder__marker--loss .ladder__dot {
+  border-color: var(--loss);
+}
+
+.ladder__marker--entry .ladder__dot {
+  background: var(--ink);
+}
+
+.ladder__text {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.ladder__name {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ladder__price {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.ladder__detail {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.ladder-empty {
+  padding: 28px 16px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------- Tabel pilihan lot ---------- */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 440px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 12px 14px 12px 0;
+  border-top: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.table thead th {
+  border-top: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.table__lot {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.table tr.is-recommended > * {
+  background: var(--accent-bg);
+}
+
+.table tr.is-recommended > :first-child {
+  padding-left: 12px;
+  border-radius: 8px 0 0 8px;
+}
+
+.table tr.is-recommended > :last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+/* ---------- Cara hitung ---------- */
+
+.how {
+  padding-bottom: 72px;
+}
+
+.how__title {
+  margin-bottom: 24px;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.steps {
+  display: grid;
+  gap: 28px;
+}
+
+@media (min-width: 860px) {
+  .steps {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+}
+
+.step {
+  padding-top: 16px;
+  border-top: 2px solid var(--ink);
+}
+
+.step__title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.step__number {
+  color: var(--accent);
+}
+
+.step__text {
+  max-width: 46ch;
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.step__formula {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: var(--neutral-bg);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  padding: 32px 0 48px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  text-align: center;
+}
+
+.footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer__brand {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.footer__tag {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* ---------- Layar kecil ---------- */
+
+@media (max-width: 520px) {
+  .card {
+    padding: 18px;
+  }
+
+  .form__group--pair {
+    grid-template-columns: 1fr;
+  }
+
+  .ladder {
+    height: 380px;
+  }
+
+  /* Tabel dirapatkan supaya keempat kolom muat di layar HP tanpa geser. */
+  .table {
+    min-width: 0;
+  }
+
+  .table th,
+  .table td {
+    padding-right: 6px;
+  }
+
+  .table__lot {
+    font-size: 1.0625rem;
+  }
+
+  .table .money--sm .money__usd {
+    font-size: 0.9375rem;
+  }
+
+  .table .money--sm .money__idr {
+    font-size: 0.75rem;
+  }
+
+  .table .money--sm .money__pct {
+    font-size: 0.6875rem;
+  }
+
+  .table .badge {
+    padding: 2px 8px;
+    font-size: 0.75rem;
+  }
+
+  .table tr.is-recommended > :first-child {
+    padding-left: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .ladder__segment,
+  .ladder__marker {
+    transition: none;
+  }
+}
